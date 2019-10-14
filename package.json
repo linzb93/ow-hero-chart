@@ -1,0 +1,23 @@
+{
+  "name": "ow-hero-chart",
+  "version": "1.0.0",
+  "description": "守望先锋英雄训练数据图表",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linzb93/ow-hero-chart.git"
+  },
+  "author": "lzb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linzb93/ow-hero-chart/issues"
+  },
+  "homepage": "https://github.com/linzb93/ow-hero-chart#readme",
+  "dependencies": {
+    "ejs": "^2.7.1",
+    "express": "^4.17.1"
+  }
+}
