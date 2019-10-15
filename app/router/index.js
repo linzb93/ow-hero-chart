@@ -1,19 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-
+const controller = require('../controller');
 router.get('/', (_, res) => {
   res.render('index');
 });
-
-router.get('/get_data', (req, res) => {
-  console.log(req.query);
-  res.send('success');
-});
-
 router.post('/upload', (req, res) => {
-  console.log(req.body);
-  res.send('success');
+  controller.upload(req, res);
 });
-
+router.get('/sub_type_list', (req, res) => {
+  controller.subTypeList(req, res);
+});
+router.get('/get_data', (req, res) => {
+  controller.getData(req, res);
+});
 module.exports = router;
