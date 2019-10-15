@@ -1,8 +1,13 @@
 const save = require('../service/save');
+const {formatRes} = require('../utils');
+
+exports.index = (req, res) => {
+  res.render('index');
+}
 
 exports.upload = async (req, res) => {
   await save(req.body);
-  res.send('本日数据保存成功');
+  res.send(formatRes(true, null, '本日数据保存成功'));
 }
 
 exports.subTypeList = (req, res) => {

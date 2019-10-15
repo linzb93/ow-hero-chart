@@ -29,19 +29,14 @@
     $('#addData').on('click', function() {
       $('.append-con').show();
     });
-    $('.append-con .submit').on('click', function() {
+    $('#submit').on('click', function() {
       var val = $(this).prev().val().trim();
       if (val !== '') {
         submit(val);
       }
     });
     function submit(val) {
-      try {
-        JSON.parse(val);
-      } catch (e) {
-        console.log('文件格式不合法');
-        return;
-      }
+      JSON.parse(val);
       $.ajax({
         url: '/upload',
         type: 'POST',
@@ -55,16 +50,16 @@
         }
       })
     }
-    $.ajax({
-      url: '/get_data',
-      data: {
-        type: '1',
-        sub_type: '2'
-      }
-    })
-    .then(res => {
-      console.log(res);
-    });
+    // $.ajax({
+    //   url: '/get_data',
+    //   data: {
+    //     type: '1',
+    //     sub_type: '2'
+    //   }
+    // })
+    // .then(res => {
+    //   console.log(res);
+    // });
   </script>
 </body>
 </html>

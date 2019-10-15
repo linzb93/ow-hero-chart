@@ -1,0 +1,32 @@
+{
+  "hero_spec": [
+    { "name": "单场最多使用投射屏障", "id": "max_barrier" },
+    { "name": "平均能量", "id": "average_energy" },
+    { "name": "主要攻击模式命中率", "id": "shooting" },
+    { "name": "单场最多高能消灭", "id": "max_height_energy_kill" },
+    { "name": "单场最多重力喷涌消灭", "id": "max_gravity_flowing_kill" },
+    { "name": "单场最多阻挡伤害量", "id": "max_resist_demage" },
+    { "name": "平均每10分钟高能消灭", "id": "per_height_energy_kill" },
+    { "name": "平均每10分钟使用投射屏障", "id": "per_barrier" },
+    { "name": "平均每10分钟阻挡伤害量", "id": "per_resist_demage" },
+    { "name": "单场最高平均能量", "id": "max_average_energy" },
+    { "name": "平均每10分钟重力喷涌消灭", "id": "per_gravity_flowing_kill" }
+  ],
+  "battle": [{ "name": "K/D", "id": "kd" }],
+  "support": [
+    { "name": "单场最多防御助攻", "id": "max_defense_assists" },
+    { "name": "单场最多攻击助攻", "id": "max_attack_assists" },
+    { "name": "平均每10分钟攻击助攻", "id": "per_attack_assists" },
+    { "name": "平均每10分钟防御助攻", "id": "per_defense_assists" }
+  ],
+  "best": [
+    { "name": "单场最多对英雄伤害量", "id": "max_damage_hero" },
+    { "name": "单场最长火力全开时间", "id": "max_time_on_fire" }
+  ],
+  "average": [
+    { "name": "平均每10分钟消灭", "id": "per_kill" },
+    { "name": "平均每10分钟阵亡", "id": "per_die" },
+    { "name": "平均每10分钟对英雄伤害量", "id": "per_damage_hero" },
+    { "name": "平均每10分钟火力全开时间", "id": "per_time_on_fire" }
+  ]
+}
