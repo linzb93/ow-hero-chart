@@ -1,0 +1,70 @@
+<html>
+<head>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <button id="addData">添加本日数据</button>
+    <div class="append-con">
+      <textarea></textarea>
+      <button id="submit">提交</button>
+    </div>
+    <div class="chart-con">
+      <div class="clearfix">
+        <span>分类：</span>
+        <select id="mainType">
+          <option></option>
+        </select>
+        <span>子分类：</span>
+        <select id="subType">
+          <option></option>
+        </select>
+      </div>
+      <div class="chart" id="chart"></div>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/echarts/4.3.0/echarts.simple.min.js"></script> -->
+  <script>
+    $('#addData').on('click', function() {
+      $('.append-con').show();
+    });
+    $('.append-con .submit').on('click', function() {
+      var val = $(this).prev().val().trim();
+      if (val !== '') {
+        submit(val);
+      }
+    });
+    function submit(val) {
+      try {
+        JSON.parse(val);
+      } catch (e) {
+        console.log('文件格式不合法');
+        return;
+      }
+      $.ajax({
+        url: '/upload',
+        type: 'POST',
+        data: JSON.parse(val)
+      })
+      .then(res => {
+        if (res.success) {
+          console.log('提交成功');
+        } else {
+          console.log('提交失败');
+        }
+      })
+    }
+    $.ajax({
+      url: '/get_data',
+      data: {
+        type: '1',
+        sub_type: '2'
+      }
+    })
+    .then(res => {
+      console.log(res);
+    });
+  </script>
+</body>
+</html>
