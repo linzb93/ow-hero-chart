@@ -1,6 +1,5 @@
 // 标准输出
-exports.formatRes = (success, data, errMsg) => ({
-  success,
+exports.formatRes = (data, errMsg) => ({
   data,
   message: errMsg || ''
 })
