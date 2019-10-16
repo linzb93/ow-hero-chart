@@ -22,7 +22,13 @@ exports.getData = (type, sub_type) => {
     let data = {};
     const pMap = files.map(file => {
       return fs.readFile(file)
-      .then(res => {})
+      .then(res => {
+        const obj = JSON.parse(res);
+        for (let key in obj) {
+          data[key] = obj[key];
+        }
+        return Promise.resolve();
+      });
     });
     Promise.all(pMap)
     .then(resList => {})

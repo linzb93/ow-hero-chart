@@ -13,12 +13,6 @@
     { "name": "平均每10分钟重力喷涌消灭", "id": "per_gravity_flowing_kill" }
   ],
   "battle": [{ "name": "K/D", "id": "kd" }],
-  "support": [
-    { "name": "单场最多防御助攻", "id": "max_defense_assists" },
-    { "name": "单场最多攻击助攻", "id": "max_attack_assists" },
-    { "name": "平均每10分钟攻击助攻", "id": "per_attack_assists" },
-    { "name": "平均每10分钟防御助攻", "id": "per_defense_assists" }
-  ],
   "best": [
     { "name": "单场最多对英雄伤害量", "id": "max_damage_hero" },
     { "name": "单场最长火力全开时间", "id": "max_time_on_fire" }

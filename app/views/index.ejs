@@ -43,11 +43,10 @@
         data: JSON.parse(val)
       })
       .then(res => {
-        if (res.success) {
-          console.log('提交成功');
-        } else {
-          console.log('提交失败');
-        }
+        console.log('提交成功');
+      })
+      .catch(err => {
+        console.log('提交失败');
       })
     }
     // $.ajax({

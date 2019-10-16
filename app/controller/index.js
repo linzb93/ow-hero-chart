@@ -11,7 +11,7 @@ exports.upload = async (req, res) => {
   res.send(formatRes(null, '本日数据保存成功'));
 }
 
-exports.getSubTypeList = (req, res) => {
+exports.getSubTypeList = async (req, res) => {
   if (req.body && !req.body.type) {
     res.status(400).send(formatRes(null, '主类型不能为空'));
     return;
@@ -24,7 +24,7 @@ exports.getSubTypeList = (req, res) => {
   }
 }
 
-exports.getData = (req, res) => {
+exports.getData = async (req, res) => {
   const {type, sub_type} = req.query;
   if (!type) {
     res.status(400).send(formatRes(false, null, '主类型不能为空'));
