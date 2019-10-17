@@ -36,11 +36,12 @@
       }
     });
     function submit(val) {
-      JSON.parse(val);
       $.ajax({
         url: '/upload',
         type: 'POST',
-        data: JSON.parse(val)
+        data: {
+          data: val
+        }
       })
       .then(res => {
         console.log('提交成功');

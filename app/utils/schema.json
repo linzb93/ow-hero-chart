@@ -12,7 +12,7 @@
     { "name": "单场最高平均能量", "id": "max_average_energy" },
     { "name": "平均每10分钟重力喷涌消灭", "id": "per_gravity_flowing_kill" }
   ],
-  "battle": [{ "name": "K/D", "id": "kd" }],
+  "battle": [{ "name": "消灭", "id": "kill" }, { "name": "阵亡", "id": "die"}],
   "best": [
     { "name": "单场最多对英雄伤害量", "id": "max_damage_hero" },
     { "name": "单场最长火力全开时间", "id": "max_time_on_fire" }

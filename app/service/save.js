@@ -9,7 +9,7 @@ function resolve(dir) {
 
 const filterData = str => {
   const $ = cheerio.load(str);
-  return fs.readFile('../utils/schema.json', 'utf8')
+  return fs.readFile(resolve('./app/utils/schema.json'), 'utf8')
   .then(file => {
     const schema = JSON.parse(file);
     const ret = {};
@@ -23,8 +23,7 @@ const filterData = str => {
             if (!ret[type]) {
               ret[type] = {};
             }
-            ret[type][sub_type] = value;
-            break;
+            ret[type][temp[sub_type].id] = value;
           }
         }
       }
