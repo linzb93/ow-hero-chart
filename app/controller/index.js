@@ -1,6 +1,6 @@
 const save = require('../service/save');
 const {formatRes} = require('../utils');
-const {getSubTypeList, getData} = require('../service/getData');
+const { getTypeList, getSubTypeList, getData} = require('../service/getData');
 
 exports.index = (req, res) => {
   res.render('index');
@@ -11,13 +11,18 @@ exports.upload = async (req, res) => {
   res.send(formatRes(null, '本日数据保存成功'));
 }
 
+exports.getTypeList = async (req, res) => {
+  const data = await getTypeList();
+  res.send(formatRes(data));
+}
+
 exports.getSubTypeList = async (req, res) => {
-  if (req.body && !req.body.type) {
+  if (req.query && !req.query.type) {
     res.status(400).send(formatRes(null, '主类型不能为空'));
     return;
   }
   try {
-    const ret = await getSubTypeList(req.body.type);
+    const ret = await getSubTypeList(req.query.type);
     res.send(formatRes(ret));
   } catch (e) {
     res.status(400).send(formatRes(null, '未找到主类型'));

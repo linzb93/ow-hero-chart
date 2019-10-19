@@ -13,11 +13,11 @@
       <div class="clearfix">
         <span>分类：</span>
         <select id="mainType">
-          <option></option>
+          <option>请选择</option>
         </select>
         <span>子分类：</span>
         <select id="subType">
-          <option></option>
+          <option>请选择</option>
         </select>
       </div>
       <div class="chart" id="chart"></div>
@@ -50,6 +50,28 @@
         console.log('提交失败');
       })
     }
+    $.ajax({
+      url: '/type_list'
+    })
+    .then(res => {
+      $('#mainType').append($.map(res.data, item => {
+        return '<option value="' + item.id + '">' + item.name + '</option>';
+      }).join(''))
+    });
+    $('#mainType').on('change', function() {
+      var val = $(this).val();
+      $.ajax({
+        url: '/sub_type_list',
+        data: {
+          type: val
+        }
+      })
+      .then(res => {
+        $('#subType').append($.map(res.data, item => {
+          return '<option value="' + item.id + '">' + item.name + '</option>';
+        }).join(''))
+      })
+    })
     // $.ajax({
     //   url: '/get_data',
     //   data: {

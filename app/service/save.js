@@ -11,19 +11,19 @@ const filterData = str => {
   const $ = cheerio.load(str);
   return fs.readFile(resolve('./app/utils/schema.json'), 'utf8')
   .then(file => {
-    const schema = JSON.parse(file);
+    const schema = JSON.parse(file).data;
     const ret = {};
     $('tbody tr').each(function() {
       const name = $(this).find('td').first().text();
       const value = $(this).find('td').last().text();
-      for (let type in schema) {
-        let temp = schema[type];
-        for (let sub_type = 0; sub_type < temp.length; sub_type++) {
-          if (name === temp[sub_type].name) {
-            if (!ret[type]) {
-              ret[type] = {};
+      for (let type = 0; type < schema.length; type++) {
+        let children = schema[type].children;
+        for (let sub_type = 0; sub_type < children.length; sub_type++) {
+          if (name === children[sub_type].name) {
+            if (!ret[schema[type].id]) {
+              ret[schema[type].id] = {};
             }
-            ret[type][temp[sub_type].id] = value;
+            ret[schema[type].id][children[sub_type].id] = value;
           }
         }
       }
