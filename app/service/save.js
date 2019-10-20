@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const prettier = require('prettier');
 const cheerio = require('cheerio');
+const {dateFormat} = require('../utils');
 
 function resolve(dir) {
   return path.resolve(process.cwd(), dir);
@@ -33,9 +34,8 @@ const filterData = str => {
 }
 
 module.exports = async str => {
-  const now = new Date();
-  const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
-  const curMonth = `${now.getFullYear()}-${now.getMonth() + 1}`;
+  const today = dateFormat();;
+  const curMonth = dateFormat('month');
   const data = await filterData(str);
   fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8')
   .then(str => {

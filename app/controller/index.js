@@ -39,10 +39,10 @@ exports.getData = async (req, res) => {
     res.status(400).send(formatRes(false, null, '子类型不能为空'));
     return;
   }
-  if (!['day', 'week', 'month'].includes(time)) {
-    res.status(400).send(formatRes(false, null, '时间类型不正确'));
-    return;
-  }
-  const ret = await getData({type, sub_type, time});
-  res.send(formatRes(true, ret));
+  // if (!['day', 'week', 'month'].includes(time)) {
+  //   res.status(400).send(formatRes(false, null, '时间类型不正确'));
+  //   return;
+  // }
+  const ret = await getData({type, sub_type});
+  res.send(formatRes(ret));
 }

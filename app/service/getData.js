@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const {fixZero} = require('../utils');
 
 function resolve(dir) {
   return path.resolve(process.cwd(), dir);
@@ -21,33 +22,24 @@ exports.getSubTypeList = type => {
   return Promise.resolve(ret.children);
 }
 
-exports.getData = ({type, sub_type, time}) => {
+exports.getData = ({type, sub_type}) => {
+  let data = {};
   return fs.readdir(resolve('./logs'))
-  .then(files => {
-    const now = new Date();
+  .then(retFiles => {
     const readFileList = [];
-    /**
-     * 时间类型：
-     * day: 取最近10天数据
-     * week: 取最近6周数据
-     * month: 取最近4月数据
-     */
-    switch (time) {
-      case 'date':
-        readFileList.push();
-        break;
-      case 'week':
-        readFileList.push();
-        break;
-      case 'month':
-        readFileList.push();
-        break;
-      default:
-        break;
+    const now = new Date();
+    // 按日期筛选，筛选有数据的前10日
+    if (retFiles.length > 1) {
+      if (now.getMonth() === 0) {
+        readFileList.push(`${now.getFullYear() - 1}-12`, `${now.getFullYear()}-01`);
+      } else {
+        readFileList.push(`${now.getFullYear()}-${fixZero(now.getMonth())}`, `${now.getFullYear()}-${now.getMonth() + 1}`);
+      }
+    } else {
+      readFileList.push(`${now.getFullYear()}-${now.getMonth() + 1}`);
     }
-    let data = {};
     const pMap = readFileList.map(file => {
-      return fs.readFile(file)
+      return fs.readFile(resolve(`./logs/${file}.json`))
       .then(res => {
         const obj = JSON.parse(res);
         for (let key in obj) {
@@ -56,7 +48,18 @@ exports.getData = ({type, sub_type, time}) => {
         return Promise.resolve();
       });
     });
-    Promise.all(pMap)
-    .then(resList => {})
+    return Promise.all(pMap);
+  })
+  .then(() => {
+    let ret = [];
+    if (Object.keys(data).length <= 10) {
+      for (let i in data) {
+        ret.push({
+          date: i,
+          value: data[i][type][sub_type]
+        })
+      }
+    }
+    return Promise.resolve(ret);
   })
 };

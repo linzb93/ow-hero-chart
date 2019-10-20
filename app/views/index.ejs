@@ -60,6 +60,7 @@
     });
     $('#mainType').on('change', function() {
       var val = $(this).val();
+      $('#subType').children().slice(1).remove();
       $.ajax({
         url: '/sub_type_list',
         data: {
@@ -71,17 +72,22 @@
           return '<option value="' + item.id + '">' + item.name + '</option>';
         }).join(''))
       })
+    });
+    $('#subType').on('change', function() {
+      var sub_type = $(this).val();
+      var main_type = $('#mainType').val();
+        $.ajax({
+          url: '/get_data',
+          data: {
+            type: main_type,
+            sub_type
+          }
+        })
+        .then(res => {
+          console.table(res.data);
+        });
     })
-    // $.ajax({
-    //   url: '/get_data',
-    //   data: {
-    //     type: '1',
-    //     sub_type: '2'
-    //   }
-    // })
-    // .then(res => {
-    //   console.log(res);
-    // });
+    
   </script>
 </body>
 </html>
