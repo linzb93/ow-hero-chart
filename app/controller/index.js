@@ -1,6 +1,7 @@
 const save = require('../service/save');
 const {formatRes} = require('../utils');
-const { getTypeList, getSubTypeList, getData} = require('../service/getData');
+const { getTypeList, getSubTypeList} = require('../service/getType');
+const getData = require('../service/getData');
 
 exports.index = (req, res) => {
   res.render('index');

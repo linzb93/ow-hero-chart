@@ -1,34 +1,20 @@
 const fs = require('fs-extra');
 const path = require('path');
+const moment = require('moment');
 const {fixZero} = require('../utils');
+
+const MAX_DAY = 2; // 最多访问日期
 
 function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
 
-let schema = [];
-fs.readFile(resolve('./app/utils/schema.json'), 'utf8')
-.then(res => {
-  schema = JSON.parse(res).data;
-});
-
-exports.getTypeList = () => {
-  const data = schema.map(({id, name}) => ({id, name}));
-  return Promise.resolve(data);
-}
-
-exports.getSubTypeList = type => {
-  const ret = schema.filter(item => item.id === type)[0];
-  return Promise.resolve(ret.children);
-}
-
-exports.getData = ({type, sub_type}) => {
+module.exports = ({type, sub_type}) => {
   let data = {};
   return fs.readdir(resolve('./logs'))
   .then(retFiles => {
     const readFileList = [];
     const now = new Date();
-    // 按日期筛选，筛选有数据的前10日
     if (retFiles.length > 1) {
       if (now.getMonth() === 0) {
         readFileList.push(`${now.getFullYear() - 1}-12`, `${now.getFullYear()}-01`);
@@ -52,14 +38,28 @@ exports.getData = ({type, sub_type}) => {
   })
   .then(() => {
     let ret = [];
-    if (Object.keys(data).length <= 10) {
+    if (Object.keys(data).length <= MAX_DAY) {
       for (let i in data) {
         ret.push({
           date: i,
           value: data[i][type][sub_type]
-        })
+        });
+      }
+    } else {
+      let counter = 0;
+      let curDay = moment();
+      while(counter < MAX_DAY) {
+        while(!data[curDay.format('YYYY-MM-DD')]) {
+          curDay = curDay.subtract(1, 'd');
+        }
+        ret.push({
+          date: curDay.format('YYYY-MM-DD'),
+          value: data[curDay.format('YYYY-MM-DD')][type][sub_type]
+        });
+        curDay = curDay.subtract(1, 'd');
+        counter++;
       }
     }
-    return Promise.resolve(ret);
+    return Promise.resolve(ret.reverse());
   })
 };
