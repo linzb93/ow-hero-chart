@@ -8,7 +8,7 @@ function resolve(dir) {
 (async () => {
   let res;
   try {
-    res = fs.readFile(resolve('./app/utils/schema.json'), 'utf8');
+    res = await fs.readFile(resolve('./app/utils/schema.json'), 'utf8');
   } catch (e) {
     console.log(e);
     return;

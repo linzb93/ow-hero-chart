@@ -35,7 +35,7 @@ exports.getSubTypeList = async (req, res) => {
 }
 
 exports.getData = async (req, res) => {
-  const {type, sub_type, time} = req.query;
+  const {type, sub_type, time = 'day'} = req.query;
   if (!type) {
     res.status(400).send(formatRes(false, null, '主类型不能为空'));
     return;
@@ -44,10 +44,10 @@ exports.getData = async (req, res) => {
     res.status(400).send(formatRes(false, null, '子类型不能为空'));
     return;
   }
-  // if (!['day', 'week', 'month'].includes(time)) {
-  //   res.status(400).send(formatRes(false, null, '时间类型不正确'));
-  //   return;
-  // }
+  if (!['day', 'week'].includes(time)) {
+    res.status(400).send(formatRes(false, null, '时间类型不正确'));
+    return;
+  }
   const ret = await getData({type, sub_type});
   res.send(formatRes(ret));
 }

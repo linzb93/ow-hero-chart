@@ -40,14 +40,14 @@ module.exports = async str => {
   const today = moment().format('YYYY-MM-DD');
   const curMonth = moment().format('YYYY-MM');
   let data;
-  let str;
+  let file;
   try {
     data = await filterData(str)
   } catch (e) {
     return Promise.reject(e);
   }
   try {
-    str = fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
+    file = await fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
   } catch (e) {
     if (e.code === 'ENOENT') {
       await fs.writeFile(`logs/${curMonth}.json`, prettier.format(JSON.stringify({
@@ -57,7 +57,7 @@ module.exports = async str => {
       }));
     }
   }
-  const target = JSON.parse(str);
+  const target = JSON.parse(file);
   target[today] = data;
   return fs.writeFile(`logs/${curMonth}.json`, prettier.format(JSON.stringify(target), {
     parser: 'json'
