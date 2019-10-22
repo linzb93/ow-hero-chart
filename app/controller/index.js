@@ -8,7 +8,11 @@ exports.index = (req, res) => {
 }
 
 exports.upload = async (req, res) => {
-  await save(req.body.data);
+  try {
+    await save(req.body.data);
+  } catch (e) {
+    console.log(e);
+  }
   res.send(formatRes(null, '本日数据保存成功'));
 }
 

@@ -5,10 +5,16 @@ function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
 
-fs.readFile(resolve('./app/utils/schema.json'), 'utf8')
-.then(res => {
+(async () => {
+  let res;
+  try {
+    res = fs.readFile(resolve('./app/utils/schema.json'), 'utf8');
+  } catch (e) {
+    console.log(e);
+    return;
+  }
   schema = JSON.parse(res).data;
-});
+})();
 
 let schema = [];
 exports.getTypeList = () => {
