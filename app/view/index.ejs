@@ -4,11 +4,7 @@
 </head>
 <body>
   <div class="wrapper">
-    <button id="addData">添加本日数据</button>
-    <div class="append-con">
-      <textarea></textarea>
-      <button id="submit">提交</button>
-    </div>
+    <button class="btn-add-data" id="addData">添加本日数据</button>
     <div class="chart-con">
       <div class="clearfix">
         <span>分类：</span>
@@ -23,71 +19,16 @@
       <div class="chart" id="chart"></div>
     </div>
   </div>
+  <div class="append-box">
+    <div class="overlay"></div>
+    <div class="append-main">
+      <textarea></textarea>
+      <button class="submit" id="submit">提交</button>
+    </div>
+  </div>
+  <div class="msgbox"></div>
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-  <!-- <script src="https://cdn.bootcss.com/echarts/4.3.0/echarts.simple.min.js"></script> -->
-  <script>
-    $('#addData').on('click', function() {
-      $('.append-con').show();
-    });
-    $('#submit').on('click', function() {
-      var val = $(this).prev().val().trim();
-      if (val !== '') {
-        submit(val);
-      }
-    });
-    function submit(val) {
-      $.ajax({
-        url: '/upload',
-        type: 'POST',
-        data: {
-          data: val
-        }
-      })
-      .then(res => {
-        console.log('提交成功');
-      })
-      .catch(err => {
-        console.log('提交失败');
-      })
-    }
-    $.ajax({
-      url: '/type_list'
-    })
-    .then(res => {
-      $('#mainType').append($.map(res.data, item => {
-        return '<option value="' + item.id + '">' + item.name + '</option>';
-      }).join(''))
-    });
-    $('#mainType').on('change', function() {
-      var val = $(this).val();
-      $('#subType').children().slice(1).remove();
-      $.ajax({
-        url: '/sub_type_list',
-        data: {
-          type: val
-        }
-      })
-      .then(res => {
-        $('#subType').append($.map(res.data, item => {
-          return '<option value="' + item.id + '">' + item.name + '</option>';
-        }).join(''))
-      })
-    });
-    $('#subType').on('change', function() {
-      var sub_type = $(this).val();
-      var main_type = $('#mainType').val();
-        $.ajax({
-          url: '/get_data',
-          data: {
-            type: main_type,
-            sub_type
-          }
-        })
-        .then(res => {
-          console.table(res.data);
-        });
-    })
-    
-  </script>
+  <script src="https://cdn.bootcss.com/echarts/4.3.0/echarts.min.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>

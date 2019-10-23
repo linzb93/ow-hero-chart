@@ -30,7 +30,9 @@
   "nodemonConfig": {
     "ignore": [
       "logs/*",
-      "scripts/*"
+      "scripts/*",
+      "public/**/*",
+      "package.json"
     ]
   }
 }
