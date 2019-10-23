@@ -19,6 +19,4 @@ app.use(express.static('./public'));
 app.use('/', mainRouter);
 app.use(haltOnTimedout);
 
-app.listen(3000, () => {
-  console.log('服务器已启动');
-});
+app.listen(3000);

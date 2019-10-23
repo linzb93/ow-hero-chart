@@ -9,45 +9,7 @@ function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
 
-function getAverage(list) {
-  const first = list[0];
-  let data;
-  if (first.indexOf(':')) {
-    // 是时间
-    data = list.reduce((a,b) => {
-      const segment = b.split(':');
-      return a + Number(segment[0]) * 3600 + Number(segment[1]) * 60 + Number(segment[2]);
-    }, 0) / list.length;
-    data = parseInt(data);
-    const hour = fixZero(parseInt(data / 3600));
-    const minute = fixZero(parseInt((data - hour * 3600) / 60));
-    const second = fixZero(parseInt(data % 60));
-    return {
-      value: `${hour}:${minute}:${second}`,
-      isEmpty: data === 0
-    };
-  }
-  if (first.indexOf('%')) {
-    // 是百分数
-    data = list.reduce((a, b) => {
-      return a + Number(b.slice(0, -1));
-    }, 0) / list.length;
-    data = data.toFixed(2);
-    return {
-      value: `${data}%`,
-      isEmpty: data === 0
-    };
-  }
-  data = list.reduce((a, b) => {
-    return a + Number(b);
-  }, 0) / list.length;
-  return {
-    value: data.toFixed(2),
-    isEmpty: data === 0
-  };
-}
-
-module.exports = async ({type, sub_type, time}) => {
+module.exports = async ({type, sub_type, time = 'day'}) => {
   let data = {};
   let retFiles;
   try {
@@ -89,6 +51,7 @@ module.exports = async ({type, sub_type, time}) => {
         return Promise.reject(e);
       }
       let ret = [];
+      // console.log(ret);
       if (Object.keys(data).length <= MAX_DAY) {
         for (let i in data) {
           ret.push({
@@ -112,6 +75,7 @@ module.exports = async ({type, sub_type, time}) => {
         }
         ret = ret.reverse();
       }
+      
       return Promise.resolve(ret);
     } else if (time === 'week') {
       const pMap = retFiles.map(async file => {
@@ -140,7 +104,26 @@ module.exports = async ({type, sub_type, time}) => {
           value: data[key][type][sub_type]
         });
       }
-
+      // 遍历结果数组
+      let oriLength = ori.length;
+      let pointer = moment(ori[0].date);
+      let index = 0;
+      let value = 0;
+      while(index < oriLength) {
+        let lastDayInWeek = pointer.add(7, 'd');
+        while(moment(ori[index].date).isBefore(lastDayInWeek) && index < oriLength) {
+          value = ori[index].value;
+          index++;
+        }
+        if (index < oriLength) {
+          index--;
+        }
+        ret.push({
+          range: `${pointer.format('YYYY-MM-DD')}~${lastDayInWeek.format('YYYY-MM-DD')}`,
+          value
+        });
+        pointer = lastDayInWeek;
+      }
       return Promise.resolve(ret);
     }
   };
