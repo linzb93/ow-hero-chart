@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-
+const {remove} = require('lodash');
 function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
@@ -23,6 +23,17 @@ exports.getTypeList = () => {
 }
 
 exports.getSubTypeList = type => {
-  const ret = schema.filter(item => item.id === type)[0];
-  return Promise.resolve(ret.children);
+  const ret = schema.filter(item => item.id === type)[0].children;
+  let ret1;
+  // 将“消灭与阵亡”合并成“K/D”
+  if (ret.some(item => item.id === 'kill') && ret.some(item => item.id === 'die')) {
+    ret1 = remove(ret, item => {item.id === 'kill' || item.id === 'die'});
+    ret1.push({
+      id: 'kd',
+      name: 'K/D'
+    });
+  } else {
+    ret1 = ret;
+  }
+  return Promise.resolve(ret1);
 }

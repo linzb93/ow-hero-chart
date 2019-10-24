@@ -62,16 +62,23 @@
         }
       })
       .then(res => {
-        var data = filterData(res.data);
+        var dataObj = filterData(res.data);
+        var {data, type} = dataObj;
         var option = {
-          legend: {
-            data: ['数值']
-          },
           xAxis: {
+              name: '日期',
               type: 'category',
-              data: data.map(item => item.date)
+              data: data.map(item => item.date),
           },
           yAxis: {
+              name: (() => {
+                var map = {
+                  'time': '时长(秒)',
+                  'percent': '%',
+                  'number': '值'
+                };
+                return map[type];
+              })(),
               type: 'value',
               min: function(value) {
                 if (value.min > 500) {
@@ -85,7 +92,19 @@
               data: data.map(item => item.value),
               type: 'line',
               label: {
-                show: true
+                show: true,
+                formatter(obj) {
+                  var {data} = obj;
+                  if (type === 'time') {
+                    var hour = parseInt(data / 3600);
+                    var minute = parseInt((data - hour * 3600) / 60);
+                    var second = parseInt(data % 60);
+                    return `${fixZero(hour)}:${fixZero(minute)}:${fixZero(second)}`;
+                  } else if (type === 'percent') {
+                    return `${data}%`;
+                  }
+                  return data;
+                }
               }
           }]
         };
@@ -98,27 +117,42 @@
   });
 
   function message(type, text) {
-    $('.msgbox').addClass(type).text(text).show();
+    $('.msgbox').addClass(type).show().find('span').text(text);
     setTimeout(() => {
-      $('.msgbox').removeClass(type).text('').hide();
+      $('.msgbox').removeClass(type).hide().find('span').empty();
     }, 2000);
   }
 
   function filterData(data) {
-    return data.map(item => {
+    var type = '';
+    var ret = data.map(item => {
       var value = 0;
       if (item.value.indexOf(':') > -1) {
         var segment = item.value.split(':');
         value =  Number(segment[0]) * 3600 + Number(segment[1]) * 60 + Number(segment[2]);
+        type = 'time';
       } else if (item.value.indexOf('%') > -1) {
         value = Number(item.value.slice(0, -1));
+        type = 'percent';
       } else {
         value = Number(item.value);
+        type = 'number';
       }
       return {
         date: item.date,
         value
       }
-    })
+    });
+    return {
+      data: ret,
+      type
+    }
+  }
+
+  function fixZero(num) {
+    if (num < 10) {
+      return `0${num}`;
+    }
+    return `${num}`;
   }
 })()

@@ -48,7 +48,7 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
       return Promise.reject(e);
     }
     for (let key in content) {
-      db[key] = obj[key];
+      db[key] = content[key];
     }
     return Promise.resolve();
   });
@@ -61,10 +61,17 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
   if (time === 'day') {
     if (Object.keys(db).length <= MAX_DAY) {
       for (let i in db) {
-        ret.push({
-          date: i,
-          value: db[i][type][sub_type]
-        });
+        if (sub_type === 'kd') {
+          ret.push({
+            date: i,
+            value: (Number(db[i][type].kill) / Number(db[i][type].die)).toFixed(2)
+          })
+        } else {
+          ret.push({
+            date: i,
+            value: db[i][type][sub_type]
+          });
+        }
       }
     } else {
       // 从最近日期往前数10天
@@ -74,10 +81,17 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
         while(!db[curDay.format('YYYY-MM-DD')]) {
           curDay = curDay.subtract(1, 'd');
         }
-        ret.push({
-          date: curDay.format('YYYY-MM-DD'),
-          value: db[curDay.format('YYYY-MM-DD')][type][sub_type]
-        });
+        if (sub_type === 'kd') {
+          ret.push({
+            date: curDay.format('YYYY-MM-DD'),
+            value: (Number(db[curDay.format('YYYY-MM-DD')][type].kill) / Number(db[curDay.format('YYYY-MM-DD')][type].die)).toFixed(2)
+          });
+        } else {
+          ret.push({
+            date: curDay.format('YYYY-MM-DD'),
+            value: db[curDay.format('YYYY-MM-DD')][type][sub_type]
+          });
+        }
         curDay = curDay.subtract(1, 'd');
         counter++;
       }
@@ -85,12 +99,19 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
     }
   } else if (time === 'week') {
     let tempList = [];
-    for (let key in db) {
-      tempList.push({
-        date: key,
-        value: db[key][type][sub_type]
-      });
-    }
+    for (let i in db) {
+        if (sub_type === 'kd') {
+          tempList.push({
+            date: i,
+            value: (Number(db[i][type].kill) / Number(db[i][type].die)).toFixed(2)
+          })
+        } else {
+          tempList.push({
+            date: i,
+            value: db[i][type][sub_type]
+          });
+        }
+      }
     /**
      * 用两个指针的方式遍历数组，取每周最后一天的数据。
      * 如果本周没有数据，就沿用上周的。

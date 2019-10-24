@@ -95,22 +95,30 @@ a {
   top: 10px;
   left: 50%;
   margin-left: -120px;
+  display: none;
   width: 240px;
   height: 36px;
   line-height: 36px;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
-.msgbox.error:before {
+.msgbox i {
   display: inline-block;
-  content: '!';
-  font-size: 16px;
-  color: #f00;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 50%;
+  margin-right: 5px;
+  font-size: 14px;
+  color: #fff;
+  font-style: normal;
 }
-.msgbox.succes:before {
-  display: inline-block;
-  content: '!';
-  font-size: 16px;
-  color: #008000;
+.msgbox.error i {
+  background: #f00;
+}
+.msgbox.success i {
+  background: #008000;
 }
 .chart {
   height: 600px;

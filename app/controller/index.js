@@ -1,6 +1,6 @@
 const save = require('../service/save');
 const {formatRes} = require('../utils');
-const { getTypeList, getSubTypeList} = require('../service/getType');
+const {getTypeList, getSubTypeList} = require('../service/getType');
 const getData = require('../service/getData');
 
 exports.index = (_, res) => {
@@ -21,7 +21,10 @@ exports.upload = async (req, res) => {
 
 exports.getTypeList = async (_, res) => {
   const data = await getTypeList();
-  res.send(formatRes(data));
+  formatRes(res, {
+    data,
+    message: '获取成功'
+  })
 }
 
 exports.getSubTypeList = async (req, res) => {
@@ -34,9 +37,11 @@ exports.getSubTypeList = async (req, res) => {
   }
   try {
     const ret = await getSubTypeList(req.query.type);
-    res.send(formatRes(ret));
+    formatRes(res, {
+      data: ret
+    })
   } catch (e) {
-    formatRes({
+    formatRes(res, {
       error: 'client',
       message: '未找到主类型'
     });
@@ -72,8 +77,8 @@ exports.getData = async (req, res) => {
     formatRes(res, {
       data: ret
     });
-    res.send(formatRes(ret));
   } catch (e) {
+    console.log(e);
     formatRes(res, {
       message: 'error'
     });
