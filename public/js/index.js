@@ -3,8 +3,8 @@
   $('#addData').on('click', function() {
     $('.append-box').show();
   });
-  $('.append-box .overlay').on('click', function() {
-    $(this).parent().hide();
+  $('.append-box .overlay, .append-box .close').on('click', function() {
+    $('.append-box').hide();
   })
   $('#submit').on('click', function() {
     var val = $(this).prev().val().trim();

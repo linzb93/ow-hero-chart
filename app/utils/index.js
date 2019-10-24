@@ -1,8 +1,28 @@
+const chalk = require('chalk');
 // 标准输出
-exports.formatRes = (data, errMsg) => ({
+exports.formatRes = (res, {
+  error,
   data,
-  message: errMsg || ''
-})
+  message
+}) => {
+  if (error === 'client') {
+    res.status(400).send({
+      data: null,
+      message
+    });
+  } else if (error === 'server') {
+    res.server(500).send({
+      data: null,
+      message: '服务端故障，请稍后再试！'
+    });
+    console.log(chalk.red(message));
+  } else {
+    res.send({
+      data,
+      message
+    });
+  }
+}
 
 // 月日前面补0
 exports.fixZero = num => {
@@ -21,3 +41,5 @@ exports.dateFormat = (type = 'day', dateArg = new Date()) => {
   }
   return `${year}-${fixZero(month)}-${fixZero(date)}`;
 }
+
+exports.pro
