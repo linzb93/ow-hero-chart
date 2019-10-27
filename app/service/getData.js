@@ -9,7 +9,7 @@ function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
 
-module.exports = async ({type, sub_type, time = 'day'}) => {
+module.exports = async ({hero, type, sub_type, time = 'day'}) => {
   let db = {};
   let allFiles;
   try {
@@ -47,11 +47,15 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
     } catch(e) {
       return Promise.reject(e);
     }
-    for (let key in content) {
-      db[key] = content[key];
+    for (let date in content) {
+      if (content[date][hero]) {
+        db[date] = content[date][hero];
+      }
     }
+    console.log(db);
     return Promise.resolve();
   });
+  
   try {
     await Promise.all(pMap);
   } catch (e) {

@@ -1,8 +1,8 @@
+const {errorLogger} = require('../utils');
+
 process.on('uncaughtException', err => {
-  console.log('uncaughtException');
-  console.log(err);
+  errorLogger(err);
 });
 process.on('unhandledRejection', err => {
-  console.log('unhandledRejection');
-  console.log(err);
+  errorLogger(err);
 })

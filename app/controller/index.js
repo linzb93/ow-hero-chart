@@ -1,5 +1,6 @@
 const save = require('../service/save');
 const {formatRes} = require('../utils');
+const {assert} = require('../utils/property-validation');
 const {getTypeList, getSubTypeList, getHeroList} = require('../service/getType');
 const getData = require('../service/getData');
 
@@ -8,30 +9,40 @@ exports.index = (_, res) => {
 }
 
 exports.upload = async (req, res) => {
-  const {data, hero} = res.body;
+  const {data, hero} = req.body;
   try {
     await save(data, hero);
+    formatRes(res, {
+      data: null,
+      message: '本日数据保存成功'
+    });
   } catch (e) {
-    console.log(e);
+    formatRes(res, {
+      error: 'server',
+      message: e
+    })
   }
-  formatRes(res, {
-    data: null,
-    message: '本日数据保存成功'
-  });
 }
 
 exports.getHeroList = (_, res) => {
   formatRes(res, {
     data: getHeroList(),
     message: '获取成功'
-  })
+  });
 }
 
-exports.getTypeList = async (_, res) => {
-  if (req.query && !req.query.hero) {
+exports.getTypeList = async (req, res) => {
+  const msg = assert(req.query, [
+    {
+      name: 'hero',
+      required: true,
+      message: '英雄不能为空'
+    }
+  ])
+  if (msg) {
     formatRes(res, {
       error: 'client',
-      message: '英雄不能为空'
+      message: msg
     });
     return;
   }
@@ -43,28 +54,34 @@ exports.getTypeList = async (_, res) => {
     })
   } catch (e) {
     formatRes(res, {
-      error: 'server'
+      error: 'server',
+      message: e
     });
     return;
   }
 }
 
 exports.getSubTypeList = async (req, res) => {
-  const {hero, type} = req.query;
-  if (!hero) {
-    formatRes(res, {
-      error: 'client',
+  const msg = assert(req.query, [
+    {
+      name: 'hero',
+      required: true,
       message: '英雄不能为空'
-    });
-    return;
-  }
-  if (!type) {
+    },
+    {
+      name: 'type',
+      required: true,
+      message: '主类型不能为空'
+    }
+  ])
+  if (msg) {
     formatRes(res, {
       error: 'client',
-      message: '主类型不能为空'
+      message: msg
     });
     return;
   }
+  const {hero, type} = req.query;
   try {
     const ret = await getSubTypeList({hero, type});
     formatRes(res, {
@@ -72,39 +89,42 @@ exports.getSubTypeList = async (req, res) => {
     })
   } catch (e) {
     formatRes(res, {
-      error: 'client',
-      message: '未找到主类型'
+      error: 'server',
+      message: e
     });
   }
 }
 
 exports.getData = async (req, res) => {
   const {hero, type, sub_type, time = 'day'} = req.query;
-  if (!hero) {
-    formatRes(res, {
-      error: 'client',
+  const msg = assert(req.query, [
+    {
+      name: 'hero',
+      required: true,
       message: '英雄不能为空'
-    });
-    return;
-  }
-  if (!type) {
-    formatRes(res, {
-      error: 'client',
+    },
+    {
+      name: 'type',
+      required: true,
       message: '主类型不能为空'
-    });
-    return;
-  }
-  if (!sub_type) {
-    formatRes(res, {
-      error: 'client',
+    },
+    {
+      name: 'sub_type',
+      required: true,
       message: '子类型不能为空'
-    });
-    return;
-  }
-  if (!['day', 'week'].includes(time)) {
+    },
+    {
+      name: 'time',
+      validate(item) {
+        return ['day', 'week'].includes(item);
+      },
+      message: '时间类型不正确'
+    }
+  ]);
+  if (msg) {
     formatRes(res, {
       error: 'client',
-      message: '时间类型不正确'
+      message: msg
     });
     return;
   }
@@ -115,9 +135,9 @@ exports.getData = async (req, res) => {
       data: ret
     });
   } catch (e) {
-    console.log(e);
     formatRes(res, {
-      message: 'error'
+      error: 'server',
+      message: e
     });
   }
 }

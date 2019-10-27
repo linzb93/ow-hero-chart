@@ -3,6 +3,7 @@ const app = express();
 const mainRouter = require('./router');
 const bodyParser = require('body-parser');
 const timeout = require('connect-timeout');
+const detectPort = require('detect-port');
 require('./service/uncaughtError');
 function haltOnTimedout (req, res, next) {
   if (!req.timedout) {
@@ -19,4 +20,7 @@ app.use(express.static('./public'));
 app.use('/', mainRouter);
 app.use(haltOnTimedout);
 
-app.listen(3000);
+(async () => {
+  const port = await detectPort(3000);
+  app.listen(port);
+})();

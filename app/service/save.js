@@ -51,7 +51,6 @@ module.exports = async (str, hero) => {
   } catch (e) {
     return Promise.reject(e);
   }
-  fs.access()
   try {
     file = await fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
   } catch (e) {
@@ -66,7 +65,7 @@ module.exports = async (str, hero) => {
     return Promise.reject(e);
   }
   if (!target[today]) {
-    target[toady] = {};
+    target[today] = {};
   }
   target[today][hero] = data;
   return fs.writeFile(`logs/${curMonth}.json`, prettier.format(JSON.stringify(target), {

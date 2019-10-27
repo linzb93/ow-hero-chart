@@ -1,4 +1,6 @@
-const chalk = require('chalk');
+const PrettyError = require('pretty-error');
+const pe = new PrettyError();
+
 // 标准输出
 exports.formatRes = (res, {
   error,
@@ -15,7 +17,7 @@ exports.formatRes = (res, {
       data: null,
       message: '服务器故障，请稍后再试！'
     });
-    // console.log(chalk.red(message));
+    this.errorLogger(message);
   } else {
     res.send({
       data,
@@ -42,4 +44,6 @@ exports.dateFormat = (type = 'day', dateArg = new Date()) => {
   return `${year}-${fixZero(month)}-${fixZero(date)}`;
 }
 
-exports.pro
+exports.errorLogger = err => {
+  console.log(pe.render(err));
+}

@@ -36,7 +36,7 @@ exports.getTypeList = async hero => {
   return Promise.resolve(data);
 }
 
-exports.getSubTypeList = async type => {
+exports.getSubTypeList = async ({type, hero}) => {
   let schema = [];
   let file;
   try {

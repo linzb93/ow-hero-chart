@@ -1,6 +1,13 @@
 (function() {
   var chart = echarts.init(document.getElementById('chart'));
   $('#addData').on('click', function() {
+    if (!$('#hero').val()) {
+      message({
+        type: 'error',
+        text: '请先选择英雄'
+      });
+      return;
+    }
     $('.append-box').show();
   });
   $('.append-box .overlay, .append-box .close').on('click', function() {
@@ -9,26 +16,34 @@
   $('#submit').on('click', function() {
     var val = $(this).prev().val().trim();
     if (val !== '') {
-      submit(val);
+      $.ajax({
+        url: '/upload',
+        type: 'POST',
+        data: {
+          data: val,
+          hero: $('#hero').val()
+        }
+      })
+      .then(() => {
+        message({
+          type: 'success',
+          text: '提交成功'
+        });
+        $('.append-box').hide();
+      })
+      .catch(err => {
+        message({
+          type: 'error',
+          text: '提交失败'
+        });
+        console.log(err);
+      })
     }
   });
-  function submit(val) {
-    $.ajax({
-      url: '/upload',
-      type: 'POST',
-      data: {
-        data: val,
-        hero: 'zarya'
-      }
-    })
-    .then(() => {
-      message('success', '提交成功');
-    })
-    .catch(err => {
-      message('error','提交失败');
-      console.log(e);
-    })
-  };
+  $('#hero').chosen({
+    width: '100px',
+    disable_search_threshold: 200
+  })
   $('#mainType').chosen({
     width: '100px',
     disable_search_threshold: 200
@@ -36,26 +51,40 @@
   $('#subType').chosen({
     width: '200px',
     disable_search_threshold: 200
-  })
+  });
   $.ajax({
-    url: '/type_list',
-    data: {
-      hero: 'zarya'
-    }
+    url: 'hero_list'
   })
   .then(res => {
-    $('#mainType').append($.map(res.data, item => {
+    $('#hero').append($.map(res.data, item => {
       return '<option value="' + item.id + '">' + item.name + '</option>';
     }).join(''));
-    $('#mainType').trigger('chosen:updated');
-  });
+    $('#hero').trigger('chosen:updated');
+  })
+  $('#hero').on('change', function() {
+    var val = $(this).val();
+    $('#mainType').children().slice(1).remove();
+    $.ajax({
+      url: '/type_list',
+      data: {
+        hero: val
+      }
+    })
+    .then(res => {
+      $('#mainType').append($.map(res.data, item => {
+        return '<option value="' + item.id + '">' + item.name + '</option>';
+      }).join(''));
+      $('#mainType').trigger('chosen:updated');
+    });
+  })
   $('#mainType').on('change', function() {
     var val = $(this).val();
     $('#subType').children().slice(1).remove();
     $.ajax({
       url: '/sub_type_list',
       data: {
-        type: val
+        type: val,
+        hero: $('#hero').val()
       }
     })
     .then(res => {
@@ -73,7 +102,7 @@
         data: {
           type: main_type,
           sub_type,
-          hero: 'zarya'
+          hero: $('#hero').val()
         }
       })
       .then(res => {
@@ -126,12 +155,15 @@
         chart.setOption(option);
       })
       .catch(err => {
-        message('error', '请求失败');
+        message({
+          type: 'error',
+          message: '请求失败'
+        });
         console.log(err);
       }) 
   });
 
-  function message(type, text) {
+  function message({type, text}) {
     $('.msgbox').addClass(type).show().find('span').text(text);
     setTimeout(() => {
       $('.msgbox').removeClass(type).hide().find('span').empty();
