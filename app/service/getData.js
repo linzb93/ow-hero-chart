@@ -11,9 +11,9 @@ function resolve(dir) {
 
 module.exports = async ({type, sub_type, time = 'day'}) => {
   let db = {};
-  let AllFiles;
+  let allFiles;
   try {
-    AllFiles = fs.readdir(resolve('./logs'));
+    allFiles = fs.readdir(resolve('./logs'));
   } catch (e) {
     return Promise.reject(e);
   }
@@ -21,7 +21,7 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
   if (time === 'day') {
     // 按日搜索，选择最近两个月的最近10天数据，最多10天。
     const now = new Date();
-    if (AllFiles.length > 1) {
+    if (allFiles.length > 1) {
       if (now.getMonth() === 0) {
         filterFileList.push(`${now.getFullYear() - 1}-12`, `${now.getFullYear()}-01`);
       } else {
@@ -31,7 +31,7 @@ module.exports = async ({type, sub_type, time = 'day'}) => {
         filterFileList.push(`${now.getFullYear()}-${now.getMonth() + 1}`);
       }
   } else if (time === 'week') {
-    filterFileList = AllFiles;
+    filterFileList = allFiles;
   }
   // 整合选中文件的数据
   const pMap = filterFileList.map(async file => {

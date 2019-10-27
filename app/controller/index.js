@@ -1,6 +1,6 @@
 const save = require('../service/save');
 const {formatRes} = require('../utils');
-const {getTypeList, getSubTypeList} = require('../service/getType');
+const {getTypeList, getSubTypeList, getHeroList} = require('../service/getType');
 const getData = require('../service/getData');
 
 exports.index = (_, res) => {
@@ -8,8 +8,9 @@ exports.index = (_, res) => {
 }
 
 exports.upload = async (req, res) => {
+  const {data, hero} = res.body;
   try {
-    await save(req.body.data);
+    await save(data, hero);
   } catch (e) {
     console.log(e);
   }
@@ -19,16 +20,45 @@ exports.upload = async (req, res) => {
   });
 }
 
-exports.getTypeList = async (_, res) => {
-  const data = await getTypeList();
+exports.getHeroList = (_, res) => {
   formatRes(res, {
-    data,
+    data: getHeroList(),
     message: '获取成功'
   })
 }
 
+exports.getTypeList = async (_, res) => {
+  if (req.query && !req.query.hero) {
+    formatRes(res, {
+      error: 'client',
+      message: '英雄不能为空'
+    });
+    return;
+  }
+  try {
+    const data = await getTypeList(req.query.hero);
+    formatRes(res, {
+      data,
+      message: '获取成功'
+    })
+  } catch (e) {
+    formatRes(res, {
+      error: 'server'
+    });
+    return;
+  }
+}
+
 exports.getSubTypeList = async (req, res) => {
-  if (req.query && !req.query.type) {
+  const {hero, type} = req.query;
+  if (!hero) {
+    formatRes(res, {
+      error: 'client',
+      message: '英雄不能为空'
+    });
+    return;
+  }
+  if (!type) {
     formatRes(res, {
       error: 'client',
       message: '主类型不能为空'
@@ -36,7 +66,7 @@ exports.getSubTypeList = async (req, res) => {
     return;
   }
   try {
-    const ret = await getSubTypeList(req.query.type);
+    const ret = await getSubTypeList({hero, type});
     formatRes(res, {
       data: ret
     })
@@ -49,7 +79,14 @@ exports.getSubTypeList = async (req, res) => {
 }
 
 exports.getData = async (req, res) => {
-  const {type, sub_type, time = 'day'} = req.query;
+  const {hero, type, sub_type, time = 'day'} = req.query;
+  if (!hero) {
+    formatRes(res, {
+      error: 'client',
+      message: '英雄不能为空'
+    });
+    return;
+  }
   if (!type) {
     formatRes(res, {
       error: 'client',
@@ -73,7 +110,7 @@ exports.getData = async (req, res) => {
   }
   let ret;
   try {
-    ret = await getData({type, sub_type});
+    ret = await getData({hero, type, sub_type, time});
     formatRes(res, {
       data: ret
     });
@@ -83,5 +120,4 @@ exports.getData = async (req, res) => {
       message: 'error'
     });
   }
-  
 }

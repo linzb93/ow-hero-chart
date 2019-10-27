@@ -1,5 +1,6 @@
 <html>
 <head>
+  <link href="https://cdn.bootcss.com/chosen/1.8.6/chosen.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -8,12 +9,12 @@
     <div class="chart-con">
       <div class="clearfix">
         <span>分类：</span>
-        <select id="mainType">
-          <option>请选择</option>
+        <select id="mainType" data-placeholder="请选择">
+          <option value></option>
         </select>
         <span>子分类：</span>
-        <select id="subType">
-          <option>请选择</option>
+        <select id="subType" data-placeholder="请选择">
+          <option value></option>
         </select>
       </div>
       <div class="chart" id="chart"></div>
@@ -33,6 +34,7 @@
     <span></span>
   </div>
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/chosen/1.8.6/chosen.jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/echarts/4.3.0/echarts.min.js"></script>
   <script src="js/index.js"></script>
 </body>

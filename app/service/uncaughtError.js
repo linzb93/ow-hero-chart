@@ -1,5 +1,3 @@
-const app = require('express')();
-
 process.on('uncaughtException', err => {
   console.log('uncaughtException');
   console.log(err);

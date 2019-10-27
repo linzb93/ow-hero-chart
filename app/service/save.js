@@ -8,15 +8,20 @@ function resolve(dir) {
   return path.resolve(process.cwd(), dir);
 }
 
-const filterData = async str => {
+const filterData = async (str, hero) => {
   const $ = cheerio.load(str);
   let file;
   try {
-    file = await fs.readFile(resolve('./app/utils/schema.json'), 'utf8');
+    file = await fs.readFile(resolve(`./app/schema/${hero}.json`), 'utf8');
   } catch (e) {
     return Promise.reject(e);
   }
-  const schema = JSON.parse(file).data;
+  let schema;
+  try {
+    schema = JSON.parse(file).data;
+  } catch (e) {
+    return Promise.reject(e);
+  }
   const ret = {};
   $('tbody tr').each(function() {
     const name = $(this).find('td').first().text();
@@ -36,29 +41,34 @@ const filterData = async str => {
   return ret;
 }
 
-module.exports = async str => {
+module.exports = async (str, hero) => {
   const today = moment().format('YYYY-MM-DD');
   const curMonth = moment().format('YYYY-MM');
   let data;
   let file;
   try {
-    data = await filterData(str)
+    data = await filterData(str, hero)
   } catch (e) {
     return Promise.reject(e);
   }
+  fs.access()
   try {
     file = await fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
   } catch (e) {
     if (e.code === 'ENOENT') {
-      await fs.writeFile(`logs/${curMonth}.json`, prettier.format(JSON.stringify({
-        [today]: data
-      }), {
-        parser: 'json'
-      }));
+      await fs.writeFile(`logs/${curMonth}.json`, '');
     }
   }
-  const target = JSON.parse(file);
-  target[today] = data;
+  let target;
+  try {
+    target = JSON.parse(file);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+  if (!target[today]) {
+    target[toady] = {};
+  }
+  target[today][hero] = data;
   return fs.writeFile(`logs/${curMonth}.json`, prettier.format(JSON.stringify(target), {
     parser: 'json'
   }));

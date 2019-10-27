@@ -17,24 +17,37 @@
       url: '/upload',
       type: 'POST',
       data: {
-        data: val
+        data: val,
+        hero: 'zarya'
       }
     })
-    .then(res => {
+    .then(() => {
       message('success', '提交成功');
     })
     .catch(err => {
       message('error','提交失败');
       console.log(e);
     })
-  }
+  };
+  $('#mainType').chosen({
+    width: '100px',
+    disable_search_threshold: 200
+  });
+  $('#subType').chosen({
+    width: '200px',
+    disable_search_threshold: 200
+  })
   $.ajax({
-    url: '/type_list'
+    url: '/type_list',
+    data: {
+      hero: 'zarya'
+    }
   })
   .then(res => {
     $('#mainType').append($.map(res.data, item => {
       return '<option value="' + item.id + '">' + item.name + '</option>';
-    }).join(''))
+    }).join(''));
+    $('#mainType').trigger('chosen:updated');
   });
   $('#mainType').on('change', function() {
     var val = $(this).val();
@@ -48,7 +61,8 @@
     .then(res => {
       $('#subType').append($.map(res.data, item => {
         return '<option value="' + item.id + '">' + item.name + '</option>';
-      }).join(''))
+      }).join(''));
+      $('#subType').trigger('chosen:updated');
     })
   });
   $('#subType').on('change', function() {
@@ -58,7 +72,8 @@
         url: '/get_data',
         data: {
           type: main_type,
-          sub_type
+          sub_type,
+          hero: 'zarya'
         }
       })
       .then(res => {

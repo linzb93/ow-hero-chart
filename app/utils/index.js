@@ -11,11 +11,11 @@ exports.formatRes = (res, {
       message
     });
   } else if (error === 'server') {
-    res.server(500).send({
+    res.status(500).send({
       data: null,
-      message: '服务端故障，请稍后再试！'
+      message: '服务器故障，请稍后再试！'
     });
-    console.log(chalk.red(message));
+    // console.log(chalk.red(message));
   } else {
     res.send({
       data,
