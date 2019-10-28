@@ -96,13 +96,22 @@
   });
   $('#subType').on('change', function() {
     var sub_type = $(this).val();
+    getData(sub_type, $('[name="time-type"]:checked').val());
+  });
+  $('[name="time-type"]').on('change', function() {
+    var time = $(this).val();
+    getData($('#subType').val(), time);
+  })
+
+  function getData(sub_type, time) {
     var main_type = $('#mainType').val();
       $.ajax({
         url: '/get_data',
         data: {
           type: main_type,
           sub_type,
-          hero: $('#hero').val()
+          hero: $('#hero').val(),
+          time
         }
       })
       .then(res => {
@@ -160,8 +169,8 @@
           message: '请求失败'
         });
         console.log(err);
-      }) 
-  });
+      })
+  }
 
   function message({type, text}) {
     $('.msgbox').addClass(type).show().find('span').text(text);

@@ -13,7 +13,7 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
   let db = {};
   let allFiles;
   try {
-    allFiles = fs.readdir(resolve('./logs'));
+    allFiles = await fs.readdir(resolve('./logs'));
   } catch (e) {
     return Promise.reject(e);
   }
@@ -31,7 +31,7 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
         filterFileList.push(`${now.getFullYear()}-${now.getMonth() + 1}`);
       }
   } else if (time === 'week') {
-    filterFileList = allFiles;
+    filterFileList = allFiles.map(item => item.slice(0, -5));
   }
   // 整合选中文件的数据
   const pMap = filterFileList.map(async file => {
@@ -52,7 +52,6 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
         db[date] = content[date][hero];
       }
     }
-    console.log(db);
     return Promise.resolve();
   });
   
@@ -124,8 +123,8 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
     let index = 0;
     let value = 0;
     while(index < tempList.length) {
-      let lastDayInWeek = pointer.add(7, 'd');
-      while(moment(tempList[index].date).isBefore(lastDayInWeek) && index < tempList.length) {
+      let lastDayInWeek = pointer.clone().add(7, 'd');
+      while(index < tempList.length && moment(tempList[index].date).isBefore(lastDayInWeek)) {
         value = tempList[index].value;
         index++;
       }
@@ -133,7 +132,7 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
         index--;
       }
       ret.push({
-        range: `${pointer.format('YYYY-MM-DD')}~${lastDayInWeek.format('YYYY-MM-DD')}`,
+        date: `${pointer.format('YYYY-MM-DD')}~${lastDayInWeek.format('YYYY-MM-DD')}`,
         value
       });
       pointer = lastDayInWeek;
