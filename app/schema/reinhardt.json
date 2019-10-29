@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "name": "英雄特定",
+      "id": "hero_spec",
+      "children": [
+        { "name": "单场最多烈焰打击消灭", "id": "max_fire_kill" },
+        { "name": "单场最多裂地猛击消灭", "id": "max_crack_kill" },
+        { "name": "平均每10分钟烈焰打击消灭", "id": "per_fire_kill" },
+        { "name": "平均每10分钟裂地猛击消灭", "id": "per_crack_kill" },
+        { "name": "平均每10分钟阻挡伤害量", "id": "per_resist_demage" }
+      ]
+    },
+    {
+      "name": "战斗",
+      "id": "battle",
+      "children": [{ "name": "消灭", "id": "kill" }, { "name": "阵亡", "id": "die"}]
+    },
+    {
+      "name": "最佳",
+      "id": "best",
+      "children": [
+        { "name": "单场最多对英雄伤害量", "id": "max_damage_hero" },
+        { "name": "单场最长火力全开时间", "id": "max_time_on_fire" }
+      ]
+    },
+    {
+      "name": "平均",
+      "id": "average",
+      "children": [
+        { "name": "平均每10分钟消灭", "id": "per_kill" },
+        { "name": "平均每10分钟阵亡", "id": "per_die" },
+        { "name": "平均每10分钟对英雄伤害量", "id": "per_damage_hero" },
+        { "name": "平均每10分钟火力全开时间", "id": "per_time_on_fire" }
+      ]
+    }
+  ]
+}

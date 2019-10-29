@@ -15,6 +15,18 @@ exports.getHeroList = () => {
     {
       name: '路霸',
       id: 'roadhog'
+    },
+    {
+      name: '莱因哈特',
+      id: 'reinhardt'
+    },
+    {
+      name: '西格玛',
+      id: 'sigma'
+    },
+    {
+      name: '艾什',
+      id: 'ashe'
     }
   ]
 }
