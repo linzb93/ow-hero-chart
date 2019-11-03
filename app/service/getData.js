@@ -100,21 +100,23 @@ module.exports = async ({hero, type, sub_type, time = 'day'}) => {
       }
       ret = ret.reverse();
     }
+    ret = ret.sort((a, b) => moment(a.date).isAfter(moment(b.date)));
   } else if (time === 'week') {
     let tempList = [];
     for (let i in db) {
-        if (sub_type === 'kd') {
-          tempList.push({
-            date: i,
-            value: (Number(db[i][type].kill) / Number(db[i][type].die)).toFixed(2)
-          })
-        } else {
-          tempList.push({
-            date: i,
-            value: db[i][type][sub_type]
-          });
-        }
+      if (sub_type === 'kd') {
+        tempList.push({
+          date: i,
+          value: (Number(db[i][type].kill) / Number(db[i][type].die)).toFixed(2)
+        })
+      } else {
+        tempList.push({
+          date: i,
+          value: db[i][type][sub_type]
+        });
       }
+    }
+    tempList = tempList.sort((a, b) => moment(a.date).isAfter(moment(b.date)));
     /**
      * 用两个指针的方式遍历数组，取每周最后一天的数据。
      * 如果本周没有数据，就沿用上周的。

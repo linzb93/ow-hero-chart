@@ -55,7 +55,8 @@ module.exports = async (str, hero) => {
     file = await fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
   } catch (e) {
     if (e.code === 'ENOENT') {
-      await fs.writeFile(`logs/${curMonth}.json`, '');
+      await fs.writeFile(`${resolve(`logs/${curMonth}.json`)}`, JSON.stringify({}));
+      file = await fs.readFile(`${resolve(`logs/${curMonth}.json`)}`, 'utf8');
     }
   }
   let target;
